@@ -1,4 +1,4 @@
-package com.yu.xian.newapp;
+package com.xianyu.newapp;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("com.yu.xian.newapp", appContext.getPackageName());
+        assertEquals("com.xianyu.newapp", appContext.getPackageName());
     }
 }

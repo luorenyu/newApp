@@ -1,4 +1,4 @@
-package com.yu.xian.newapp;
+package com.xianyu.newapp;
 
 import org.junit.Test;
 

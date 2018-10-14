@@ -1,28 +1,84 @@
 apply plugin: 'com.android.application'
 
+def cfg = rootProject.ext.android
+def libraries = rootProject.ext.dependencies
+//def url = rootProject.ext.host
+//def imgUrl = rootProject.ext.imgUrl
 android {
     compileSdkVersion 27
     defaultConfig {
-        applicationId "com.yu.xian.newapp"
-        minSdkVersion 16
-        targetSdkVersion 27
-        versionCode 1
-        versionName "1.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        applicationId cfg.appId
+        minSdkVersion cfg.minSdkVersion
+        targetSdkVersion cfg.targetSdkVersion
+        versionCode cfg.versionCode
+        versionName cfg.versionName
     }
-    buildTypes {
+
+    //配置签名
+    signingConfigs {
+        debug {
+            storeFile file("../app/androidBook")
+            storePassword KEYSTORE_PASSWORD
+            keyAlias DEBUG_KEY_ALIAS
+            keyPassword DEBUG_KEY_PASSWORD
+        }
         release {
+            storeFile file("../app/androidBook")
+            storePassword KEYSTORE_PASSWORD
+            keyAlias RELEASE_KEY_ALIAS
+            keyPassword RELEASE_KEY_PASSWORD
+        }
+    }
+
+    buildTypes {
+        debug {
+            //是否压缩资源
+            shrinkResources false
+            //是否混淆
             minifyEnabled false
+            //混淆配置文件
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            //签名配置
+            signingConfig signingConfigs.debug
+            //在release包名后面添加了一个后缀形成了debug的包名
+            applicationIdSuffix '.inhouse'
+            //在AndroidManifest.xml中配置的app名称，在这里实现了动态配置
+            resValue "string", "app_name", "@string/app_name_debug"
+            //该数组的值都可以在AndroidManifest.xml文件中配置。
+            manifestPlaceholders = [
+                    //这里也是在AndroidManifest.xml中配置的app图标，同样在这里写了了不同的资源文件，从而实现了动态配置
+                    app_icon: "@drawable/app_logo_debug",
+            ]
+            //通过配置buildConfig来动态配置请求的host服务器和图片服务器
+            buildConfigField "String", "HostUrl", "\"${url["release"]}\""
+            buildConfigField "String", "ImageUrl", "\"${imgUrl["release"]}\""
+        }
+
+        release {
+            shrinkResources true
+            minifyEnabled true
+            resValue "string", "app_name", "@string/app_name_release"
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+            manifestPlaceholders = [
+                    app_icon: "@drawable/app_logo",
+            ]
+            buildConfigField "String", "HostUrl", "\"${url["uat"]}\""
+            buildConfigField "String", "ImageUrl", "\"${imgUrl["debug"]}\""
+
         }
     }
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'com.android.support:appcompat-v7:27.1.1'
-    implementation 'com.android.support.constraint:constraint-layout:1.1.2'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    //统一引用了config.gradle中配置的库文件，从而实现在config.gradle实现统一管理
+    implementation libraries.supportV7
+    implementation libraries.constraint
+    implementation libraries.supportDesign
+    implementation libraries.recyclerview
+    implementation libraries.cardview
 }

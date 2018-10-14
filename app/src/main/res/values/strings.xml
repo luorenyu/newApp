@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">newApp</string>
+    <string name="app_name_release">AndroidBook</string>
+    <string name="app_name_debug">AndroidBook测试版</string>
 </resources>
