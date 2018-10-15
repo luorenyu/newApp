@@ -32,6 +32,8 @@ android {
 
     buildTypes {
         debug {
+            //增加一个debug版本的版本名后缀
+            versionNameSuffix ".0.beta"
             //是否压缩资源
             shrinkResources false
             //是否混淆
