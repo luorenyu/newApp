@@ -6,6 +6,7 @@
 
 ext {
     supportLibrary = "27.1.0"
+    vnSuffix = ".0.beta"
     android = [
             appId:"com.xianyu.app",
             compileSdkVersion: 27,
